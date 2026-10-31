@@ -1,0 +1,24 @@
+# Run: docker compose -f deploy/compose.dev.yml up --build
+# Export TOWER_DEV_TOKEN before starting. Local development only.
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    environment:
+      TOWER_DEV_TOKEN: ${TOWER_DEV_TOKEN:?Export TOWER_DEV_TOKEN}
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - knowledge:/data
+  worker:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    command: ["python", "-m", "tower_kb.workers.tasks"]
+    environment:
+      TOWER_DEV_TOKEN: ${TOWER_DEV_TOKEN:?Export TOWER_DEV_TOKEN}
+    volumes:
+      - knowledge:/data
+volumes:
+  knowledge:
