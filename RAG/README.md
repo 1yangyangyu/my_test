@@ -31,6 +31,17 @@ cd /workspace/my_test/RAG
 
 API 与 Worker 是独立进程；快照/容器重启后必须重新启动。无需后台调度器即可运行本地闭环。`.env.example` 只提供变量说明，不会自动加载。开发 Token 映射到服务端固定的 `demo-user/demo-org`、`admin/engineer` 角色和 `demo-region` 区域；不能用客户端 Header 或请求字段伪造身份。本地模式不能模拟企业多用户登录，测试通过领域服务注入不同身份验证隔离。生产模式启动会失败关闭。
 
+## 外部服务环境变量模板
+
+`.env.example` 还提供后续接入所需的配置占位：
+
+- 大模型：`API_KEY`、`BASE_URL`、`LLM_MODEL`，用于 DeepSeek/OpenAI 兼容服务。
+- Milvus：`MILVUS_HOST`、`MILVUS_PORT`、`MILVUS_USERNAME`、`MILVUS_PASSWORD`，以及 TLS、数据库和集合配置。
+- BGE-M3：`BGE_M3_MODE`、本地模型路径/设备，或在线服务地址、模型名和可选密钥。
+- Langfuse：启用开关、Public/Secret Key 和实例地址。
+
+将模板复制为 `.env` 后自行填写密钥和密码；`.env` 已被 Git 忽略。上述外部配置尚未被当前本地实现读取，填入配置不会自动切换检索或模型，也不会自动启用链路日志。后续需实现相应适配器和配置校验。请勿把真实密钥填写到会提交的 `.env.example` 中。
+
 ## 导入、发布、提问
 
 先准备经过脱敏的 UTF-8 `.txt` 或 `.md` 文件：
